@@ -1,12 +1,16 @@
-
+// 第三步：localStorage本地保存
 const form = document.querySelector('#add-form');
 const input = document.querySelector('#task-input');
 const tip = document.querySelector('#tip');
 const list = document.querySelector('#task-list');
 const filters = document.querySelector('.filters');
 
-let tasks = [];
+// 启动时恢复数据：没有存档时 || '[]' 保证得到空数组而非 null
+let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
 let currentFilter = 'all'; // all / active / done
+
+// 每次修改数组后调用：对象→JSON字符串
+const save = () => localStorage.setItem('tasks', JSON.stringify(tasks));
 
 const render = () => {
   list.innerHTML = '';
@@ -32,6 +36,7 @@ const render = () => {
     del.addEventListener('click', (e) => {
       e.stopPropagation();
       tasks = tasks.filter(t => t !== task);
+      save();
       render();
     });
     li.appendChild(del);
@@ -39,6 +44,7 @@ const render = () => {
     // 点击切换完成状态
     li.addEventListener('click', () => {
       task.done = !task.done;
+      save();
       render();
     });
     list.appendChild(li);
@@ -53,6 +59,7 @@ form.addEventListener('submit', (e) => {
     return;
   }
   tasks.push({ text: text, done: false });
+  save();
   tip.textContent = '';
   input.value = '';
   render();
