@@ -1,4 +1,4 @@
-// 第一步：添加记录与统一渲染（含输入校验）
+// 第二步：删除与查询功能
 const form = document.querySelector('#add-form');
 const dateInput = document.querySelector('#date-input');
 const typeInput = document.querySelector('#type-input');
@@ -6,21 +6,30 @@ const durationInput = document.querySelector('#duration-input');
 const notesInput = document.querySelector('#notes-input');
 const tip = document.querySelector('#tip');
 const list = document.querySelector('#record-list');
+const searchInput = document.querySelector('#search-input');
 
 // 唯一状态：记录数组
 let records = [];
+// 当前搜索关键词（查询功能）
+let currentKeyword = '';
 
 // 统一渲染：先改数组、再调render
 const render = () => {
   list.innerHTML = '';
-  if (records.length === 0) {
+  // 查询过滤：按类型或备注匹配关键词
+  const shown = records.filter(r =>
+    !currentKeyword ||
+    r.type.includes(currentKeyword) ||
+    (r.notes && r.notes.includes(currentKeyword))
+  );
+  if (shown.length === 0) {
     const li = document.createElement('li');
     li.className = 'empty';
-    li.textContent = '暂无记录，开始记录你的健身之旅吧';
+    li.textContent = currentKeyword ? '没有匹配的记录' : '暂无记录，开始记录你的健身之旅吧';
     list.appendChild(li);
     return;
   }
-  records.forEach(record => {
+  shown.forEach(record => {
     const li = document.createElement('li');
     li.className = 'record';
 
@@ -39,9 +48,19 @@ const render = () => {
     durSpan.className = 'duration';
     durSpan.textContent = record.duration + '分钟';
 
+    // 删除按钮
+    const del = document.createElement('span');
+    del.className = 'del';
+    del.textContent = '删除';
+    del.addEventListener('click', () => {
+      records = records.filter(r => r !== record);
+      render();
+    });
+
     head.appendChild(typeTag);
     head.appendChild(dateSpan);
     head.appendChild(durSpan);
+    head.appendChild(del);
 
     const notesDiv = document.createElement('div');
     notesDiv.className = 'notes';
@@ -83,6 +102,12 @@ form.addEventListener('submit', (e) => {
   });
   tip.textContent = '';
   form.reset();
+  render();
+});
+
+// 查询功能：input事件实时过滤
+searchInput.addEventListener('input', (e) => {
+  currentKeyword = e.target.value.trim();
   render();
 });
 

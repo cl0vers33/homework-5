@@ -15,12 +15,16 @@
     button { padding: 6px 16px; background: #4caf50; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
     button:hover { background: #43a047; }
     .tip { color: #c00; font-size: 14px; min-height: 20px; margin: 8px 0; }
+    .filters { margin: 12px 0; }
+    .filters input { width: 60%; }
     .record { border: 1px solid #ddd; padding: 12px; margin: 8px 0; border-radius: 6px; list-style: none; }
     .record-head { display: flex; align-items: center; gap: 12px; }
     .type { background: #e3f2fd; color: #1565c0; padding: 2px 10px; border-radius: 10px; font-size: 13px; }
     .date { color: #666; font-size: 14px; }
     .duration { color: #2e7d32; font-size: 14px; }
     .notes { color: #555; font-size: 14px; margin-top: 6px; }
+    .del { margin-left: auto; color: #c00; cursor: pointer; font-size: 14px; }
+    .del:hover { text-decoration: underline; }
     .empty { color: #999; list-style: none; }
     ul { padding: 0; }
   </style>
@@ -55,6 +59,9 @@
     <button type="submit">添加记录</button>
   </form>
   <p class="tip" id="tip"></p>
+  <div class="filters">
+    <input type="text" id="search-input" placeholder="按类型或备注搜索">
+  </div>
   <ul id="record-list"></ul>
   <script src="app.js"></script>
 </body>
